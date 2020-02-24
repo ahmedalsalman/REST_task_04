@@ -1,8 +1,10 @@
 from rest_framework.generics import ListAPIView, RetrieveAPIView, RetrieveUpdateAPIView, DestroyAPIView, CreateAPIView
 from datetime import datetime
-
+from django.contrib.auth.models import User
 from .models import Flight, Booking
-from .serializers import FlightSerializer, BookingSerializer, BookingDetailsSerializer, UpdateBookingSerializer
+from .serializers import FlightSerializer, BookingSerializer, BookingDetailsSerializer, UpdateBookingSerializer, UserSerializer
+from django.contrib.auth import get_user_model # If used custom user model
+from rest_framework import permissions
 
 
 class FlightsList(ListAPIView):
@@ -41,3 +43,9 @@ class BookFlight(CreateAPIView):
 	def perform_create(self, serializer):
 		serializer.save(user=self.request.user, flight_id=self.kwargs['flight_id'])
 
+class CreateUserView(CreateAPIView):
+	model = User
+	#permission_classes = [permissions.AllowAny]
+	serializer_class = UserSerializer
+	#def perform_create(self, serializer):
+	#	serializer.save(username=user.username)
